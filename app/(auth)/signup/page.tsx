@@ -1,8 +1,6 @@
 "use client";
 
 import SignupForm from "@/components/auth/signup-form";
-import { User, Mail, Lock } from "lucide-react";
-import Link from "next/link";
 
 export default function SignupPage() {
   return (

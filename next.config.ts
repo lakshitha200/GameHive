@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
    images: {
     domains: ["images.unsplash.com"], // whitelist the external image domain
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;

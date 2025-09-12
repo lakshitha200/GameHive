@@ -1,5 +1,4 @@
 import NavLink from "@/components/ui/NavLink";
-import Link from "next/link";
 import { ReactNode } from "react";
 
 export default function AccountLayout({ children }: { children: ReactNode }) {

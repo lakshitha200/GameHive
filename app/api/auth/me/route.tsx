@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 
-export async function GET(req: Request) {
+export async function GET() {
     const session = (await cookies()).get("session")?.value;
     if (!session) {
         return Response.json({ user: null });

@@ -1,6 +1,7 @@
 import StarRating from "@/components/games/StarRating";
 import { games } from "@/lib/data/games";
-import { ChevronLeft, Star } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function GameDetailPage({ params }: { params: { id: string } }) {
@@ -19,7 +20,7 @@ export default function GameDetailPage({ params }: { params: { id: string } }) {
         </Link>
 
         <div className="grid md:grid-cols-2 gap-12 items-start">
-          <img src={game.image} alt={game.title} className="w-full rounded-xl shadow-lg object-cover" />
+          <Image src={game.image} alt={game.title} className="w-full rounded-xl shadow-lg object-cover" />
 
           <div className="space-y-6">
             <h1 className="text-4xl font-bold text-gray-900 dark:text-white">{game.title}</h1>

@@ -4,6 +4,7 @@ import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import StarRating from "./StarRating";
 import { useCart } from "@/lib/providers/cart-provider";
+import Image from "next/image";
 
 export default function GameCard({ game }: any) {
   const { addItem } = useCart();
@@ -22,7 +23,7 @@ export default function GameCard({ game }: any) {
     <Link href={`/games/${game.id}`}>
       <div className="game-card rounded-2xl overflow-hidden">
         <div className="h-48 overflow-hidden relative">
-          <img src={game.image} alt="Space Battle" className="w-full h-full object-cover" />
+          <Image src={game.image} alt="Space Battle" className="w-full h-full object-cover" />
           {game.discount != 0 && <div className="discount-badge">-{game.discount}%</div>}
           <div className="platform-badge">{game.platforms.join(", ")}</div>
         </div>

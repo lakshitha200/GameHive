@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function AboutPage() {
   return (
     <main className="container mx-auto px-6 py-16 space-y-16">
@@ -12,9 +14,11 @@ export default function AboutPage() {
 
       <section className="grid md:grid-cols-2 gap-12 items-center">
         <div>
-          <img
-            src="/images/logo.png" // replace with actual public image
+          <Image
+            src="/images/logo.png" 
             alt="About Image"
+            width={400}           
+            height={300}          
             className="rounded-xl shadow-lg"
           />
         </div>

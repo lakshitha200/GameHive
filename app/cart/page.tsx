@@ -2,6 +2,7 @@
 
 import { useCart } from "@/lib/providers/cart-provider";
 import { Trash2 } from "lucide-react";
+import Image from "next/image";
 
 export default function CartPage() {
   const { cart,subtotal,updateQuantity,removeItem } = useCart();
@@ -18,7 +19,7 @@ export default function CartPage() {
           <div className="lg:col-span-2 space-y-6">
             {cart.map((item) => (
               <div key={item.id} className="flex items-center bg-white dark:bg-gray-800 rounded-xl shadow p-4">
-                <img src={item.image} alt={item.title} className="w-24 h-24 object-cover rounded-lg" />
+                <Image src={item.image} alt={item.title} className="w-24 h-24 object-cover rounded-lg" />
                 <div className="ml-4 flex-1">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{item.title}</h2>
                   <p className="text-gray-600 dark:text-gray-300">${item.price.toFixed(2)}</p>

@@ -1,5 +1,4 @@
 "use client";
-import { games } from "@/lib/data/games";
 import { useState } from "react";
 import { Search, Filter } from "lucide-react";
 

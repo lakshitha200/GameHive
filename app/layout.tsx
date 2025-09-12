@@ -7,17 +7,6 @@ import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "@/lib/providers/auth-provider";
 import { CartProvider } from "@/lib/providers/cart-provider";
 
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
   title: "GameHive",
   description: "Modern game marketplace",

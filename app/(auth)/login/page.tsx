@@ -1,8 +1,6 @@
 "use client";
 
 import LoginForm from "@/components/auth/login-form";
-import { Mail, Lock } from "lucide-react";
-import Link from "next/link";
 
 export default function LoginPage() {
   return (
