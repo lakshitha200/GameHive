@@ -1,0 +1,38 @@
+export const newsArticles = [
+  {
+    id: 1,
+    title: "New Expansion Released for CS:GO",
+    slug: "csgo-new-expansion",
+    summary: "CS:GO launches a new map expansion with updated skins.",
+    content: "Counter-Strike: Global Offensive has released a new expansion featuring maps, skins, and weapon updates. Players can now explore new tactical gameplay and competitive modes.",
+    date: "2025-09-10",
+    image: "https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg",
+  },
+  {
+    id: 2,
+    title: "Dota 2 Major Tournament Highlights",
+    slug: "dota2-major-tournament",
+    summary: "Team highlights and winner analysis from the latest Dota 2 Major.",
+    content: "The Dota 2 Major concluded with an intense final. Team strategies, hero picks, and standout plays were analyzed, with top players making history.",
+    date: "2025-09-08",
+    image: "https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg",
+  },
+  {
+    id: 3,
+    title: "GTA V Online Update Adds Heist Missions",
+    slug: "gta-v-online-heist-update",
+    summary: "Grand Theft Auto V Online introduces new heist missions and vehicles.",
+    content: "GTA V Online now includes a series of heist missions, new vehicles, and enhanced multiplayer interactions, bringing fresh challenges for players.",
+    date: "2025-09-06",
+    image: "https://cdn.cloudflare.steamstatic.com/steam/apps/271590/header.jpg",
+  },
+  {
+    id: 4,
+    title: "Apex Legends Introduces New Legend",
+    slug: "apex-legends-new-legend",
+    summary: "Apex Legends adds a new legend with unique abilities to the roster.",
+    content: "The latest Apex Legends update brings a new playable legend, new weapons, and map improvements, enhancing the battle royale experience.",
+    date: "2025-09-05",
+    image: "https://cdn.cloudflare.steamstatic.com/steam/apps/1172470/header.jpg",
+  },
+];
