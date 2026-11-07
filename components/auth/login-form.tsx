@@ -1,58 +1,71 @@
 "use client";
 
+import { FormEvent, useState } from "react";
+import { Mail } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/providers/auth-provider";
-import { Mail, Lock } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Errors, validateLogin } from "@/lib/validation";
+import FormField from "../ui/FormField";
+import PasswordInput from "./password-input";
 
+type E = Errors<"email" | "password">;
 
 export default function LoginForm() {
-  
-  const { loading,login } = useAuth();
+  const { login } = useAuth();
+  const router = useRouter();
+  const params = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter();
+  const [errors, setErrors] = useState<E>({});
+  const [formError, setFormError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const looged = await login(email, password);
-    if(looged){
-      router.push("/account/library");
+    setFormError("");
+    const errs = validateLogin({ email, password });
+    setErrors(errs);
+    if (Object.keys(errs).length) return;
+
+    setSubmitting(true);
+    const r = await login(email.trim(), password);
+    setSubmitting(false);
+    if (r.ok) {
+      const next = params.get("next");
+      // only allow same-site relative redirects
+      router.push(next && next.startsWith("/") && !next.startsWith("//") ? next : "/account/library");
+    } else {
+      setFormError(r.message ?? "Login failed");
     }
   };
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit}>
-      <div className="relative">
-        <Mail className="absolute top-3 left-3 w-5 h-5 text-gray-400 dark:text-gray-500" />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-3 pl-10 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-          required
-        />
-      </div>
-
-      <div className="relative">
-        <Lock className="absolute top-3 left-3 w-5 h-5 text-gray-400 dark:text-gray-500" />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-3 pl-10 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-          required
-        />
-      </div>
-
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-lg transition shadow-md hover:shadow-lg disabled:opacity-50"
-      >
-        {loading ? "Logging in..." : "Login"}
+    <form className="space-y-5" onSubmit={handleSubmit} noValidate>
+      {formError && (
+        <div role="alert" key={formError} className="animate-shake rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+          {formError}
+        </div>
+      )}
+      <FormField
+        label="Email"
+        icon={Mail}
+        type="email"
+        autoComplete="email"
+        placeholder="you@example.com"
+        value={email}
+        onChange={(e) => { setEmail(e.target.value); setErrors((x) => ({ ...x, email: undefined })); }}
+        error={errors.email}
+      />
+      <PasswordInput
+        label="Password"
+        autoComplete="current-password"
+        placeholder="Your password"
+        value={password}
+        onChange={(e) => { setPassword(e.target.value); setErrors((x) => ({ ...x, password: undefined })); }}
+        error={errors.password}
+      />
+      <button type="submit" disabled={submitting} className="btn-primary w-full">
+        {submitting ? (<><span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" /> Logging in…</>) : "Login"}
       </button>
     </form>
   );

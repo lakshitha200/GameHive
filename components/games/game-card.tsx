@@ -1,57 +1,75 @@
 "use client";
 
-import { ShoppingCart } from "lucide-react";
+import { Check, Heart, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import StarRating from "./StarRating";
+import GameImage from "../ui/GameImage";
 import { useCart } from "@/lib/providers/cart-provider";
-import Image from "next/image";
+import { useCollection } from "@/lib/providers/collection-provider";
+import { Game } from "@/lib/data/games";
+import { finalPrice, money } from "@/lib/format";
 
-export default function GameCard({ game }: any) {
-  const { addItem } = useCart();
-  const calculatePrice = (price: number, discount: number) => {
-    return (price - (price * discount) / 100).toFixed(2);
-  }
-
-  const addToCart = (e: any) => {
-    e.preventDefault(); // stop Link navigation
-    e.stopPropagation(); // stop bubbling
-    addItem(game);
-    console.log("Added to cart:", game.id);
-  }
+export default function GameCard({ game }: { game: Game }) {
+  const { addItem, has } = useCart();
+  const { inWishlist, toggleWishlist, library } = useCollection();
+  const price = finalPrice(game.price, game.discount);
+  const owned = library.includes(game.id);
+  const inCart = has(game.id);
+  const wished = inWishlist(game.id);
 
   return (
-    <Link href={`/games/${game.id}`}>
-      <div className="game-card rounded-2xl overflow-hidden">
-        <div className="h-48 overflow-hidden relative">
-          <Image src={game.image} alt="Space Battle" className="w-full h-full object-cover" />
-          {game.discount != 0 && <div className="discount-badge">-{game.discount}%</div>}
-          <div className="platform-badge">{game.platforms.join(", ")}</div>
-        </div>
-        <div className="p-6">
-          <h3 className="text-xl font-heading font-bold mb-2">{game.title}</h3>
-          <StarRating rating={game.rating} reviews={game.reviews} />
+    <article className="game-card group flex flex-col">
+      <div className="relative h-48 overflow-hidden">
+        <GameImage src={game.image} alt={`${game.title} cover`} sizes="(max-width:768px) 100vw, (max-width:1280px) 33vw, 25vw" />
+        {game.discount > 0 && <div className="discount-badge">-{game.discount}%</div>}
+        <div className="platform-badge">{game.platforms.join(", ")}</div>
+        <button
+          onClick={() => toggleWishlist(game.id)}
+          aria-pressed={wished}
+          aria-label={wished ? `Remove ${game.title} from wishlist` : `Add ${game.title} to wishlist`}
+          className="absolute bottom-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-slate-900/80 backdrop-blur transition hover:scale-110 active:scale-90"
+        >
+          <Heart key={String(wished)} className={`h-4 w-4 ${wished ? "animate-pop fill-pink-500 text-pink-500" : "text-white"}`} />
+        </button>
+      </div>
 
-          <div className="flex justify-between items-center">
-            <div className="price-tag py-1 px-3 rounded-full">
-              {game.price == 0 ?
-                <>
-                  <span className="text-white font-bold">Free</span>
-                </>
-                :
-                <>
-                  <span className="line-through text-gray-500 text-sm">${game.price.toFixed(2)}</span>
-                  <span className="text-white font-bold ml-2">${calculatePrice(game.price, game.discount)}</span>
-                </>
-              }
+      <div className="flex flex-1 flex-col p-5">
+        <h3 className="mb-1 font-heading text-lg font-bold">
+          {/* stretched link: whole card is clickable without nesting buttons in anchors */}
+          <Link href={`/games/${game.id}`} className="after:absolute after:inset-0 after:z-0 hover:text-indigo-300">
+            {game.title}
+          </Link>
+        </h3>
+        <p className="mb-2 truncate text-xs text-gray-500">{game.categories.join(" · ")}</p>
+        <StarRating rating={game.rating} reviews={game.reviews} className="mb-4" />
 
-            </div>
-            <button className="px-2 py-2 button-primary add-to-cart z-40 "
-              onClick={addToCart}>
-              <ShoppingCart size={20} />
-            </button>
+        <div className="mt-auto flex items-center justify-between">
+          <div className="price-tag">
+            {game.price === 0 ? (
+              <span className="font-bold text-emerald-400">Free</span>
+            ) : (
+              <>
+                {game.discount > 0 && <span className="text-sm text-gray-500 line-through">{money(game.price)}</span>}
+                <span className={`font-bold text-white ${game.discount > 0 ? "ml-2" : ""}`}>{money(price)}</span>
+              </>
+            )}
           </div>
+
+          {owned ? (
+            <Link href="/account/library" className="relative z-10 flex items-center gap-1 text-sm font-medium text-emerald-400">
+              <Check size={16} /> Owned
+            </Link>
+          ) : (
+            <button
+              className="btn-primary relative z-10 !p-2.5"
+              onClick={() => addItem(game)}
+              aria-label={inCart ? `Add another ${game.title} to cart` : `Add ${game.title} to cart`}
+            >
+              {inCart ? <Check size={20} /> : <ShoppingCart size={20} />}
+            </button>
+          )}
         </div>
       </div>
-    </Link>
+    </article>
   );
 }

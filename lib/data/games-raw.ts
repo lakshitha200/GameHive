@@ -1,4 +1,4 @@
-export const games = [
+export const rawGames = [
   {
     id: 1,
     title: "CS:GO",

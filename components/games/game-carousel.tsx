@@ -2,53 +2,36 @@
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import "swiper/css/navigation";
 import { Autoplay, EffectCoverflow } from "swiper/modules";
+import Link from "next/link";
 import StarRating from "./StarRating";
-import Image from "next/image";
+import GameImage from "../ui/GameImage";
+import { Game } from "@/lib/data/games";
 
-export default function GameCarousel({ games }: { games: any[] }) {
+export default function GameCarousel({ games }: { games: Game[] }) {
   return (
     <Swiper
       effect="coverflow"
-      grabCursor={true}
-      centeredSlides={true}
+      grabCursor
+      centeredSlides
       slidesPerView="auto"
-      coverflowEffect={{
-        rotate: 0,
-        stretch: 0,
-        depth: 300,
-        modifier: 1,
-        slideShadows: false,
-      }}
-
-      loop={true}
-      autoplay={{
-        delay: 2500,
-        disableOnInteraction: false,
-      }}
+      coverflowEffect={{ rotate: 0, stretch: 0, depth: 300, modifier: 1, slideShadows: false }}
+      loop
+      autoplay={{ delay: 2800, disableOnInteraction: false, pauseOnMouseEnter: true }}
       modules={[EffectCoverflow, Autoplay]}
       className="mySwiper"
     >
-      {
-
-        games.map((game) => (
-
-          <SwiperSlide className="swiper-slide">
-            <div className="bg-gray-900 rounded-xl overflow-hidden shadow-lg hover:scale-105 transition transform relative">
-              <Image src={game.image} alt="CS2" className="w-full h-40 object-cover" />
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
-                <h3 className="text-xl font-bold">{game.title}</h3>
-                <div className="flex items-center mt-2">
-                  <StarRating rating={game.rating} reviews={game.reviews}/>
-                </div>
-              </div>
+      {games.map((game) => (
+        <SwiperSlide key={game.id}>
+          <Link href={`/games/${game.id}`} className="group relative block h-full w-full overflow-hidden rounded-xl bg-gray-900">
+            <GameImage src={game.image} alt={game.title} sizes="400px" className="transition duration-700 group-hover:scale-110" />
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/70 to-transparent p-4 pt-12">
+              <h3 className="text-xl font-bold">{game.title}</h3>
+              <StarRating rating={game.rating} reviews={game.reviews} className="mt-1" />
             </div>
-
-          </SwiperSlide>
-
-        ))
-      }
+          </Link>
+        </SwiperSlide>
+      ))}
     </Swiper>
   );
 }

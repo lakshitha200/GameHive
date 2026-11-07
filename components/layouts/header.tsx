@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { Menu, X, ShoppingCart, User } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Menu, X, ShoppingCart, User, Heart, LogIn } from "lucide-react";
 import { useAuth } from "@/lib/providers/auth-provider";
-import NavLink from "../ui/NavLink";
-import { link } from "fs";
 import { useCart } from "@/lib/providers/cart-provider";
+import NavLink from "../ui/NavLink";
+import { usePathname } from "next/navigation";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -14,102 +14,130 @@ const navLinks = [
   { name: "Store", href: "/store" },
   { name: "News", href: "/news" },
   { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
 ];
+
+function CartButton({ onClick }: { onClick?: () => void }) {
+  const { count, hydrated } = useCart();
+  return (
+    <NavLink href="/cart" label={`Cart, ${count} items`} onClick={onClick}>
+      <span className="relative inline-flex">
+        <ShoppingCart size={20} />
+        {hydrated && count > 0 && (
+          <span
+            key={count}
+            className="animate-pop absolute -right-3 -top-3 flex h-5 min-w-5 items-center justify-center rounded-full bg-pink-500 px-1 text-[10px] font-bold text-white ring-2 ring-neutral-900"
+          >
+            {count}
+          </span>
+        )}
+      </span>
+    </NavLink>
+  );
+}
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { loading, user } = useAuth();
-  const { cart } = useCart();
+  const pathname = usePathname();
 
+  useEffect(() => setOpen(false), [pathname]);
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const close = () => setOpen(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-neutral-900/70 backdrop-blur-md border-b border-neutral-800">
-      <div className="container flex items-center justify-between py-4">
-        {/* Logo */}
-        <Link href="/" className="text-3xl font-heading font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#6366f1] to-[#ec4899]">
-          GameHive
+    <header
+      className={`sticky top-0 z-50 border-b backdrop-blur-md transition-all duration-300 ${
+        scrolled ? "border-neutral-800 bg-neutral-950/85 shadow-lg shadow-black/30" : "border-transparent bg-neutral-950/50"
+      }`}
+    >
+      <div className={`container flex items-center justify-between transition-all duration-300 ${scrolled ? "py-3" : "py-4"}`}>
+        <Link href="/" className="font-heading text-2xl font-bold transition-transform hover:scale-105 sm:text-3xl">
+          <span className="gradient-text">GameHive</span>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <NavLink key={link.href} href={link.href}>{link.name}</NavLink>
+        <nav aria-label="Main" className="hidden items-center gap-7 md:flex">
+          {navLinks.map((l) => (
+            <NavLink key={l.href} href={l.href}>
+              {l.name}
+            </NavLink>
           ))}
+          <span className="h-5 w-px bg-neutral-700" aria-hidden />
+          <NavLink href="/account/wishlist" label="Wishlist">
+            <Heart size={20} />
+          </NavLink>
+          <CartButton />
           {!loading &&
-            <>
-              {user ? (
-                <>
-                  <NavLink href="/cart">
-                    <div className="relative">
-                      <ShoppingCart size={20} />
-                      <div className="absolute inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-pink-400 border-2 border-white rounded-full -top-3 -end-3 dark:border-gray-900">
-                        {cart.length}
-                      </div>
-                    </div>
-                  </NavLink>
-                  <NavLink href="/account/profile"><User size={20} /></NavLink>
-                </>
-              ) : (
-                <>
-                  <Link href="/login" className="px-4 py-2 rounded text-white border-2 border-purple-400 hover:bg-purple-400 transition">
-                    Login
-                  </Link>
-                  <Link href="/signup" className="px-4 py-2 rounded bg-purple-400 text-white hover:bg-purple-600 transition">
-                    Signup
-                  </Link>
-                </>
-              )}
-            </>
-
-          }
-
+            (user ? (
+              <NavLink href="/account/profile" label="My account">
+                <span className="flex items-center gap-2">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-pink-500 text-xs font-bold text-white">
+                    {user.name.charAt(0).toUpperCase()}
+                  </span>
+                </span>
+              </NavLink>
+            ) : (
+              <>
+                <Link href="/login" className="btn-secondary btn-sm">
+                  Login
+                </Link>
+                <Link href="/signup" className="btn-primary btn-sm">
+                  Sign up
+                </Link>
+              </>
+            ))}
         </nav>
 
-        {/* Mobile Button */}
-        <button
-          className="md:hidden p-2 rounded hover:bg-neutral-800"
-          onClick={() => setOpen(!open)}
-        >
-          {open ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        {/* Mobile */}
+        <div className="flex items-center gap-4 md:hidden">
+          <CartButton />
+          <button
+            className="rounded p-2 transition hover:bg-neutral-800"
+            onClick={() => setOpen(!open)}
+            aria-expanded={open}
+            aria-label={open ? "Close menu" : "Open menu"}
+          >
+            {open ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
-      {/* Mobile Drawer */}
       {open && (
-        <div className="md:hidden bg-neutral-900 border-t border-neutral-800">
-          <nav className="flex flex-col p-4 gap-3">
-            {navLinks.map((link) => (
-              <NavLink key={link.href} href={link.href}>{link.name}</NavLink>
+        <div className="animate-slide-down border-t border-neutral-800 bg-neutral-950/95 md:hidden">
+          <nav aria-label="Mobile" className="container flex flex-col gap-1 py-4">
+            {navLinks.map((l) => (
+              <NavLink key={l.href} href={l.href} onClick={close} className="rounded-lg px-2 py-3 !text-base hover:bg-white/5">
+                {l.name}
+              </NavLink>
             ))}
-            <div className="flex gap-4 mt-4">
+            <NavLink href="/account/wishlist" onClick={close} className="rounded-lg px-2 py-3 !text-base hover:bg-white/5">
+              Wishlist
+            </NavLink>
+            <div className="mt-3 flex gap-3">
               {!loading &&
-                <>
-                  {user ? (
-                    <>
-                      <NavLink href="/cart">
-                        <div className="relative">
-                          <ShoppingCart size={20} />
-                          <div className="absolute inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-pink-400 border-2 border-white rounded-full -top-3 -end-3 dark:border-gray-900">
-                            {cart.length}
-                          </div>
-                        </div>
-                      </NavLink>
-                      <NavLink href="/account/profile"><User size={20} /></NavLink>
-                    </>
-                  ) : (
-                    <>
-                      <Link href="/login" className="px-4 py-2 rounded bg-green-500 text-white hover:bg-green-600 transition">
-                        Login
-                      </Link>
-                      <Link href="/signup" className="px-4 py-2 rounded bg-purple-500 text-white hover:bg-purple-600 transition">
-                        Signup
-                      </Link>
-                    </>
-                  )}
-                </>
-
-              }
+                (user ? (
+                  <Link href="/account/profile" onClick={close} className="btn-primary btn-sm flex-1">
+                    <User size={16} /> My account
+                  </Link>
+                ) : (
+                  <>
+                    <Link href="/login" onClick={close} className="btn-secondary btn-sm flex-1">
+                      <LogIn size={16} /> Login
+                    </Link>
+                    <Link href="/signup" onClick={close} className="btn-primary btn-sm flex-1">
+                      Sign up
+                    </Link>
+                  </>
+                ))}
             </div>
           </nav>
         </div>

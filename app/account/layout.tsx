@@ -1,26 +1,26 @@
 import NavLink from "@/components/ui/NavLink";
+import AccountGuard from "@/components/account/account-guard";
+import PageHeader from "@/components/ui/PageHeader";
 import { ReactNode } from "react";
 
+const tabs = [
+  { name: "Profile", href: "/account/profile" },
+  { name: "Library", href: "/account/library" },
+  { name: "Wishlist", href: "/account/wishlist" },
+];
+
 export default function AccountLayout({ children }: { children: ReactNode }) {
-  const tabs = [
-    { name: "Profile", href: "/account/profile" },
-    { name: "Library", href: "/account/library" },
-    { name: "Wishlist", href: "/account/wishlist" },
-  ];
-
   return (
-    <main className="container mx-auto px-6 py-16">
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">My Account</h1>
-
-      <nav className="flex gap-4 mb-12 border-b border-gray-200 dark:border-gray-700">
+    <div className="container py-12">
+      <PageHeader title="My Account" />
+      <nav aria-label="Account" className="mb-10 flex gap-8 border-b border-white/10 pb-3">
         {tabs.map((tab) => (
-          <NavLink key={tab.href} href={tab.href}>{tab.name}</NavLink>
-          
-  
+          <NavLink key={tab.href} href={tab.href} className="!text-base">
+            {tab.name}
+          </NavLink>
         ))}
       </nav>
-
-      {children}
-    </main>
+      <AccountGuard>{children}</AccountGuard>
+    </div>
   );
 }

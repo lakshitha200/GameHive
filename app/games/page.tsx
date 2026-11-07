@@ -1,27 +1,20 @@
+import type { Metadata } from "next";
 import { games } from "@/lib/data/games";
-import GameCard from "@/components/games/game-card";
 import GameCarousel from "@/components/games/game-carousel";
-import GameFilter from "@/components/games/game-filter";
+import GameBrowser from "@/components/games/game-browser";
+import PageHeader from "@/components/ui/PageHeader";
 
+export const metadata: Metadata = { title: "All Games", description: "Browse every game on GameHive: search, filter and sort." };
 
 export default function GamesPage() {
+  const top = [...games].sort((a, b) => b.popularity - a.popularity).slice(0, 8);
   return (
-    <main className="container mx-auto px-6 py-16 space-y-12">
-      <h1 className="font-heading text-4xl font-bold text-gray-900 dark:text-white">All Games</h1>
-
-      {/* Filters */}
-      <GameFilter />
-
-
-      {/* Featured Carousel: top 5 games */}
-      <GameCarousel games={games} />
-
-      {/* Game Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-        {games.map((game) => (
-          <GameCard key={game.id} game={game} />
-        ))}
+    <div className="container py-12">
+      <PageHeader title="All Games" subtitle="Search the whole catalogue, or jump into a trending title." />
+      <GameCarousel games={top} />
+      <div className="mt-10">
+        <GameBrowser games={games} />
       </div>
-    </main>
+    </div>
   );
 }
