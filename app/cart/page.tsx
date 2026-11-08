@@ -87,7 +87,9 @@ export default function CartPage() {
     <div className="container py-12">
       <PageHeader title="Your Cart" />
 
-      {!hydrated ? (
+      {!authLoading && !user ? (
+        <EmptyState icon={Lock} title="Log in to view your cart" text="Sign in to add games to your cart and check out." href="/login?next=/cart" cta="Log in" />
+      ) : !hydrated ? (
         <div className="grid gap-8 lg:grid-cols-3">
           <div className="space-y-4 lg:col-span-2">
             {[0, 1].map((i) => <Skeleton key={i} className="h-32 w-full !rounded-2xl" />)}

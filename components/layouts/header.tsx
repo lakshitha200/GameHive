@@ -72,10 +72,14 @@ export function Header() {
             </NavLink>
           ))}
           <span className="h-5 w-px bg-neutral-700" aria-hidden />
-          <NavLink href="/account/wishlist" label="Wishlist">
-            <Heart size={20} />
-          </NavLink>
-          <CartButton />
+          {user && (
+            <>
+              <NavLink href="/account/wishlist" label="Wishlist">
+                <Heart size={20} />
+              </NavLink>
+              <CartButton />
+            </>
+          )}
           {!loading &&
             (user ? (
               <NavLink href="/account/profile" label="My account">
@@ -99,7 +103,7 @@ export function Header() {
 
         {/* Mobile */}
         <div className="flex items-center gap-4 md:hidden">
-          <CartButton />
+          {user && <CartButton />}
           <button
             className="rounded p-2 transition hover:bg-neutral-800"
             onClick={() => setOpen(!open)}
@@ -119,9 +123,11 @@ export function Header() {
                 {l.name}
               </NavLink>
             ))}
-            <NavLink href="/account/wishlist" onClick={close} className="rounded-lg px-2 py-3 !text-base hover:bg-white/5">
-              Wishlist
-            </NavLink>
+            {user && (
+              <NavLink href="/account/wishlist" onClick={close} className="rounded-lg px-2 py-3 !text-base hover:bg-white/5">
+                Wishlist
+              </NavLink>
+            )}
             <div className="mt-3 flex gap-3">
               {!loading &&
                 (user ? (

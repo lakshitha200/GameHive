@@ -72,6 +72,11 @@ body {
   outline-offset: 2px;
 }
 
+@utility btn {
+  @apply inline-flex cursor-pointer select-none items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold transition duration-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100;
+}
+
+@layer components {
 .container { @apply mx-auto w-full max-w-7xl px-4 sm:px-6; }
 
 .gradient-text {
@@ -82,9 +87,6 @@ body {
 .section-sub { @apply mx-auto mt-3 max-w-2xl text-gray-400; }
 
 /* ---------- Buttons ---------- */
-@utility btn {
-  @apply inline-flex cursor-pointer select-none items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold transition duration-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100;
-}
 .btn-primary,
 .button-primary {
   @apply btn text-white;
@@ -170,6 +172,8 @@ select.field { @apply pl-3; }
   transform: translateX(-100%);
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.07), transparent);
   animation: shimmer 1.4s infinite;
+}
+
 }
 
 /* ---------- Scroll reveal ---------- */

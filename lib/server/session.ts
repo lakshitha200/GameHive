@@ -1,3 +1,4 @@
+import { DEMO_USER } from "@/lib/data/demo";
 import { createHmac, randomBytes, scryptSync, timingSafeEqual } from "crypto";
 
 const SECRET = process.env.AUTH_SECRET ?? "dev-only-secret-change-me";
@@ -51,5 +52,5 @@ export const cookieOptions = {
 type StoredUser = SessionUser & { passwordHash: string };
 const g = globalThis as unknown as { __users?: Map<string, StoredUser> };
 export const users = (g.__users ??= new Map<string, StoredUser>([
-  ["lakshithaf20@gmail.com", { id: 1, name: "John Doe", email: "lakshithaf20@gmail.com", passwordHash: hashPassword("Online12@") }],
+  [DEMO_USER.email, { id: DEMO_USER.id, name: DEMO_USER.name, email: DEMO_USER.email, passwordHash: hashPassword(DEMO_USER.password) }],
 ]));

@@ -6,16 +6,20 @@ import StarRating from "./StarRating";
 import GameImage from "../ui/GameImage";
 import { useCart } from "@/lib/providers/cart-provider";
 import { useCollection } from "@/lib/providers/collection-provider";
+import { useAuth } from "@/lib/providers/auth-provider";
+import { useRequireAuth } from "@/lib/use-require-auth";
 import { Game } from "@/lib/data/games";
 import { finalPrice, money } from "@/lib/format";
 
 export default function GameCard({ game }: { game: Game }) {
   const { addItem, has } = useCart();
   const { inWishlist, toggleWishlist, library } = useCollection();
+  const { user } = useAuth();
+  const requireAuth = useRequireAuth();
   const price = finalPrice(game.price, game.discount);
-  const owned = library.includes(game.id);
-  const inCart = has(game.id);
-  const wished = inWishlist(game.id);
+  const owned = !!user && library.includes(game.id);
+  const inCart = !!user && has(game.id);
+  const wished = !!user && inWishlist(game.id);
 
   return (
     <article className="game-card group flex flex-col">
@@ -24,7 +28,7 @@ export default function GameCard({ game }: { game: Game }) {
         {game.discount > 0 && <div className="discount-badge">-{game.discount}%</div>}
         <div className="platform-badge">{game.platforms.join(", ")}</div>
         <button
-          onClick={() => toggleWishlist(game.id)}
+          onClick={() => requireAuth(() => toggleWishlist(game.id))}
           aria-pressed={wished}
           aria-label={wished ? `Remove ${game.title} from wishlist` : `Add ${game.title} to wishlist`}
           className="absolute bottom-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-slate-900/80 backdrop-blur transition hover:scale-110 active:scale-90"
@@ -62,7 +66,7 @@ export default function GameCard({ game }: { game: Game }) {
           ) : (
             <button
               className="btn-primary relative z-10 !p-2.5"
-              onClick={() => addItem(game)}
+              onClick={() => requireAuth(() => addItem(game))}
               aria-label={inCart ? `Add another ${game.title} to cart` : `Add ${game.title} to cart`}
             >
               {inCart ? <Check size={20} /> : <ShoppingCart size={20} />}

@@ -1,7 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { Mail } from "lucide-react";
+import { FlaskConical, Mail } from "lucide-react";
+import { DEMO_USER } from "@/lib/data/demo";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/providers/auth-provider";
 import { Errors, validateLogin } from "@/lib/validation";
@@ -41,6 +42,19 @@ export default function LoginForm() {
 
   return (
     <form className="space-y-5" onSubmit={handleSubmit} noValidate>
+      <div className="rounded-lg border border-indigo-500/30 bg-indigo-500/10 p-3 text-sm">
+        <p className="flex items-center gap-2 font-semibold text-indigo-300"><FlaskConical size={14} /> Test account</p>
+        <p className="mt-1 text-gray-300">
+          {DEMO_USER.email} / {DEMO_USER.password}
+        </p>
+        <button
+          type="button"
+          className="mt-2 font-medium text-indigo-400 underline-offset-2 hover:underline"
+          onClick={() => { setEmail(DEMO_USER.email); setPassword(DEMO_USER.password); setErrors({}); setFormError(""); }}
+        >
+          Fill in automatically
+        </button>
+      </div>
       {formError && (
         <div role="alert" key={formError} className="animate-shake rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
           {formError}
