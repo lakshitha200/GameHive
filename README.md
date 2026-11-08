@@ -24,7 +24,7 @@ Checkout is a demo and never charges anything. Use card `4242 4242 4242 4242`, a
 - **Cart & checkout**: quantity limits, promo codes with minimum-spend rules, persisted cart, validated card form (Luhn check, expiry, CVC), purchases land in your Library.
 - **News**: 8 articles with categories, authors, read time and a filter.
 - **Validation**: shared rules for login, signup (with password-strength meter), contact, profile, newsletter and checkout; the API routes re-validate on the server.
-- **Animation & UX**: scroll reveals, count-up stats, hover lifts, animated badges and toasts, skeleton loading, empty states, 404 / error pages. Respects `prefers-reduced-motion`. Responsive down to mobile, keyboard accessible, skip link and ARIA labels.
+- **Animation & UX**: scroll reveals, count-up stats, hover lifts, animated badges and toasts, skeleton loading, empty states, a custom 404 page (also served for unknown game / news URLs) and an error page. Respects `prefers-reduced-motion`. Responsive down to mobile, keyboard accessible, skip link and ARIA labels.
 
 ## 📸 Screenshots
 
@@ -35,6 +35,7 @@ Checkout is a demo and never charges anything. Use card `4242 4242 4242 4242`, a
 | ![Login](docs/screenshots/login-validation.png) **Login**: validation and test account | ![Cart](docs/screenshots/cart.png) **Cart**: promo code applied |
 | ![Checkout](docs/screenshots/checkout-validation.png) **Checkout**: card validation | ![Profile](docs/screenshots/profile.png) **Profile** |
 | ![Library](docs/screenshots/library.png) **Library** | ![Mobile](docs/screenshots/mobile-home.png) **Mobile** |
+| ![404](docs/screenshots/404.png) **404 page** | |
 
 <details>
 <summary>Full home page</summary>

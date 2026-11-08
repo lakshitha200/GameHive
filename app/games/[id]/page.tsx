@@ -12,6 +12,8 @@ import { finalPrice, formatDate, money } from "@/lib/format";
 
 type Props = { params: Promise<{ id: string }> };
 
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return games.map((g) => ({ id: String(g.id) }));
 }

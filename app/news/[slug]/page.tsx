@@ -10,6 +10,8 @@ import Reveal from "@/components/ui/Reveal";
 
 type Props = { params: Promise<{ slug: string }> };
 
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return newsArticles.map((n) => ({ slug: n.slug }));
 }
